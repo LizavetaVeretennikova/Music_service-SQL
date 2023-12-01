@@ -35,7 +35,7 @@ constraint M_A primary key(musician_id, album_id)
 create table if not exists Tracks(
 id INTEGER primary key references Albums(id),
 track_name VARCHAR(200) not null,
-lenght numeric not null
+lenght INTEGER not null
 );
 
 create table if not exists Collections(
