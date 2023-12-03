@@ -33,7 +33,8 @@ constraint M_A primary key(musician_id, album_id)
 --один к одному
 
 create table if not exists Tracks(
-id INTEGER primary key references Albums(id),
+id SERIAL primary key,
+album_id INTEGER references Albums(id),
 track_name VARCHAR(200) not null,
 lenght INTEGER not null
 );
