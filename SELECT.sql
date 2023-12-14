@@ -1,7 +1,8 @@
 --SELECT-запросы
 --задание 2 
 --1)Название и продолжительность самого длительного трека
-select MAX(lenght), MAX(track_name) from tracks;
+select lenght, track_name from tracks
+where lenght = (select MAX(lenght) from tracks);
 
 --2)Название треков, продолжительность которых не менее 3,5 минут
 select track_name, lenght from tracks
@@ -17,11 +18,8 @@ where musician_name not like '% %';
 
 --5)Название треков, которые содержат слово «мой» или «my»
 select track_name from tracks
-where track_name like '%my%'
-or track_name like '%My%' 
-or track_name like '%Мой%' 
-or track_name like '%мой%';
-
+where track_name ilike '%my%'
+or track_name ilike '%Мой%';
 
 --Задание 3
 --1)Количество исполнителей в каждом жанре
@@ -45,18 +43,20 @@ join albums a on t.album_id = a.id
 group by album_name;
 
 --4)Все исполнители, которые не выпустили альбомы в 2020 году
-select musician_name, album_name, album_year
-from musicians m 
-join musicians_albums ma on m.id = ma.musician_id
-join albums a on a.id = ma.album_id
-where album_year not between '2020-01-01' and '2020-12-31';
+select musician_name from musicians
+except
+select musician_name from musicians
+where id = (select musician_id from musicians_albums
+where musician_id = (select id from albums
+where album_year between '2020-01-01' and '2020-12-31'));
 
 --5)Названия сборников, в которых присутствует конкретный исполнитель (выберите его сами)
-select collection_name
-from collections
-where collection_name like '%Hans Zimmer%';
-
-
-
+select musician_name, collection_name from musicians m
+join musicians_albums ma on m.id = ma.musician_id
+join albums a on ma.musician_id = a.id
+join tracks t on a.id = t.id
+join tracks_collections tc on t.id = tc.track_id
+join collections c on tc.collection_id = c.id
+where musician_name = 'Coldplay';
 
 
